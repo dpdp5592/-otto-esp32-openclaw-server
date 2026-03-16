@@ -1,0 +1,12 @@
+services:
+  xiaozhi-esp32-server:
+    image: xiaozhi-local/server-openclaw:dev
+    build:
+      context: ../..
+      dockerfile: Dockerfile-server
+
+  xiaozhi-esp32-server-web:
+    image: xiaozhi-local/web-openclaw:dev
+    build:
+      context: ../..
+      dockerfile: Dockerfile-web

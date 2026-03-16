@@ -1,0 +1,24 @@
+# runtime
+main/xiaozhi-server/data/
+main/xiaozhi-server/tmp/
+main/xiaozhi-server/uploadfile/
+main/xiaozhi-server/mysql/data/
+main/xiaozhi-server/music/
+
+# local models / large assets
+main/xiaozhi-server/models/
+
+# caches
+__pycache__/
+*.pyc
+*.pyo
+*.swp
+
+# frontend / java build outputs
+main/manager-web/node_modules/
+main/manager-web/dist/
+main/manager-api/target/
+
+# local env
+.env
+.DS_Store

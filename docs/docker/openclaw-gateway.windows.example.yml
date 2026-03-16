@@ -1,0 +1,17 @@
+services:
+  openclaw-gateway:
+    image: alpine/openclaw:latest
+    container_name: openclaw-gateway
+    restart: always
+    ports:
+      - "18789:18789"
+      - "18790:18790"
+    environment:
+      - OPENCLAW_GATEWAY_BIND=lan
+      - OPENCLAW_CONFIG_PATH=/home/node/.openclaw/openclaw.json
+      # Uncomment and fill these if your current Linux runtime uses them.
+      # - OPENCLAW_GATEWAY_TOKEN=replace_me
+      # - OLLAMA_API_KEY=replace_me
+    volumes:
+      - D:/xiaozhi-runtime/openclaw/config:/home/node/.openclaw
+      - D:/xiaozhi-runtime/openclaw/workspace:/home/node/.openclaw/workspace
