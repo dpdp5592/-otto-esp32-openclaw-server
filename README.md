@@ -92,6 +92,13 @@ bash scripts/rebuild_local_docker_stack.sh
 - `8002` 智控台
 - `8003` body bridge / manager-api 内嵌接口
 
+首次启动会拉起四个容器：
+
+- `xiaozhi-esp32-server-db`
+- `xiaozhi-esp32-server-redis`
+- `xiaozhi-esp32-server`
+- `xiaozhi-esp32-server-web`
+
 不要用 `docker restart` 代替这条命令。
 
 只要源码有改动，就应该重新执行：
@@ -101,6 +108,14 @@ bash scripts/rebuild_local_docker_stack.sh
 ```
 
 这样才能保证运行中的镜像始终来自当前仓库的最新本地源码，而不是旧容器状态。
+
+第一次构建还需要联网拉取：
+
+- `ghcr.io/xinnan-tech/xiaozhi-esp32-server:server-base`
+- `node:18`
+- `maven:3.9.4-eclipse-temurin-21`
+- `bellsoft/liberica-runtime-container:jre-21-glibc`
+- npm / Maven 依赖
 
 ### 6. 验证
 

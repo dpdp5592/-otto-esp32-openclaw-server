@@ -13,7 +13,11 @@ cd "$STACK_DIR"
 docker compose \
   -f docker-compose_all.yml \
   -f docker-compose_all.local.yml \
-  up -d --build xiaozhi-esp32-server xiaozhi-esp32-server-web
+  up -d --build \
+  xiaozhi-esp32-server-db \
+  xiaozhi-esp32-server-redis \
+  xiaozhi-esp32-server \
+  xiaozhi-esp32-server-web
 
 docker compose \
   -f docker-compose_all.yml \
