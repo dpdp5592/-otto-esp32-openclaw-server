@@ -11,6 +11,7 @@
 
 ## 启动路径
 
+- 同事可以先执行 `bash scripts/check_prereqs.sh`
 - 同事只需要执行 `bash scripts/bootstrap_local_runtime.sh`
 - 同事只需要执行 `bash scripts/rebuild_local_docker_stack.sh`
 - 本地构建镜像名固定为：
@@ -38,6 +39,7 @@
 依次执行：
 
 ```bash
+bash scripts/check_prereqs.sh
 bash scripts/bootstrap_local_runtime.sh
 bash scripts/rebuild_local_docker_stack.sh
 bash scripts/verify_openclaw_stack.sh

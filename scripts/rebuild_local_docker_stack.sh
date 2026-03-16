@@ -4,6 +4,10 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 STACK_DIR="$REPO_ROOT/main/xiaozhi-server"
 
+if [ -x "$REPO_ROOT/scripts/check_prereqs.sh" ]; then
+  "$REPO_ROOT/scripts/check_prereqs.sh"
+fi
+
 if [ -x "$REPO_ROOT/scripts/bootstrap_local_runtime.sh" ]; then
   "$REPO_ROOT/scripts/bootstrap_local_runtime.sh"
 fi

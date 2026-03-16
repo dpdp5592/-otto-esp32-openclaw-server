@@ -45,6 +45,7 @@
 
 ```bash
 cd /path/to/otto-esp32-openclaw-server
+bash scripts/check_prereqs.sh
 bash scripts/bootstrap_local_runtime.sh
 ```
 
@@ -156,6 +157,7 @@ bash scripts/verify_openclaw_stack.sh
 
 一名新的协作者成功接手该项目后，至少应满足：
 
+- `bash scripts/check_prereqs.sh` 能完成环境自检
 - `bash scripts/rebuild_local_docker_stack.sh` 可以成功完成构建和启动
 - `http://localhost:8002` 可以打开智控台
 - `bash scripts/verify_openclaw_stack.sh` 返回成功
