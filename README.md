@@ -1,13 +1,13 @@
 # otto-esp32-openclaw-server
 
-这是从 `xiaozhi-esp32-server` 裁剪出的 Otto + OpenClaw 专用项目子集。
+本仓库是从 `xiaozhi-esp32-server` 裁剪出的 Otto + OpenClaw 专用项目子集。
 
 目标很明确：
 
 - 保留 Otto + OpenClaw 链路真正需要的源码
 - 保留当前项目需要的核心文档
 - 去掉与你本机强绑定的运行态数据、大模型文件和无关模块
-- 让同事 `git clone` 后按固定脚本启动，并且默认跑这份仓库里的最新 OpenClaw 网关代码
+- 使协作者在 `git clone` 后可按固定脚本启动，并默认运行该仓库中的最新 OpenClaw 网关代码
 
 ## 项目结构
 
@@ -26,7 +26,7 @@
 - `scripts/`
   - 本地运行目录初始化与 Docker 重建脚本
 
-## 同事 Clone 后的最短启动路径
+## 标准启动路径
 
 ### 1. 安装基础依赖
 
@@ -35,7 +35,7 @@
 - Docker / Docker Compose
 - Git
 
-如果要本地编译验证，还建议安装：
+如果需要本地编译验证，建议额外安装：
 
 - JDK 21
 - Maven
@@ -55,22 +55,24 @@ bash scripts/bootstrap_local_runtime.sh
 - `main/xiaozhi-server/uploadfile`
 - `main/xiaozhi-server/models/SenseVoiceSmall`
 
-并生成一个可编辑的：
+并生成以下可编辑文件：
 
 - `main/xiaozhi-server/data/.config.yaml`
 - 来源模板：`main/xiaozhi-server/data/.config.yaml.example`
 
 ### 3. 准备必要模型文件
 
-当前默认配置仍使用 FunASR 本地模型，因此至少需要：
+当前默认配置仍使用 FunASR 本地模型，因此至少需要准备：
 
 - `main/xiaozhi-server/models/SenseVoiceSmall/model.pt`
 
-如果没有这个文件，服务端大概率无法按当前默认配置正常启动。
+如果缺少该文件，服务端大概率无法按当前默认配置正常启动。
+
+模型下载方式可参考 [Deployment_all.md](docs/Deployment_all.md) 中的 `SenseVoiceSmall` 说明。
 
 ### 4. 覆盖设备真正要拿到的地址
 
-在 `main/xiaozhi-server/data/.config.yaml` 里至少覆盖：
+`main/xiaozhi-server/data/.config.yaml` 至少应覆盖：
 
 ```yaml
 server:
@@ -78,7 +80,7 @@ server:
   vision_explain: http://<你的局域网IP>:8003/mcp/vision/explain
 ```
 
-这是为了避免设备拿到 Docker 容器内网地址。
+这样可以避免设备拿到 Docker 容器内网地址。
 
 ### 5. 启动本地源码镜像
 
@@ -99,9 +101,9 @@ bash scripts/rebuild_local_docker_stack.sh
 - `xiaozhi-esp32-server`
 - `xiaozhi-esp32-server-web`
 
-不要用 `docker restart` 代替这条命令。
+不应使用 `docker restart` 代替这条命令。
 
-只要源码有改动，就应该重新执行：
+只要源码有改动，就应重新执行：
 
 ```bash
 bash scripts/rebuild_local_docker_stack.sh
@@ -109,7 +111,7 @@ bash scripts/rebuild_local_docker_stack.sh
 
 这样才能保证运行中的镜像始终来自当前仓库的最新本地源码，而不是旧容器状态。
 
-第一次构建还需要联网拉取：
+首次构建还需要联网拉取：
 
 - `ghcr.io/xinnan-tech/xiaozhi-esp32-server:server-base`
 - `node:18`
@@ -137,13 +139,13 @@ xiaozhi-local/web-openclaw:dev
 
 - `http://localhost:8002`
 
-如果你要确认“跑起来的就是这份仓库的最新 OpenClaw 版本，并且已经带上 `OpenClaw配对码` 功能”，再执行：
+如需确认“运行中的就是该仓库的最新 OpenClaw 版本，并且已经带有 `OpenClaw配对码` 功能”，可继续执行：
 
 ```bash
 bash scripts/verify_openclaw_stack.sh
 ```
 
-这个脚本会检查：
+该脚本会检查：
 
 - 当前容器是否是本地源码镜像，而不是官方 `latest`
 - 前端打包产物是否包含 `OpenClaw配对码` / `openClawPairCode`
@@ -152,7 +154,7 @@ bash scripts/verify_openclaw_stack.sh
 
 ## 最小交付标准
 
-一个新同事成功接手这份项目，至少应满足：
+一名新的协作者成功接手该项目后，至少应满足：
 
 - `bash scripts/rebuild_local_docker_stack.sh` 可以成功完成构建和启动
 - `http://localhost:8002` 可以打开智控台
@@ -162,15 +164,15 @@ bash scripts/verify_openclaw_stack.sh
 
 ## 关于 OpenClaw 网关版本
 
-这份仓库包含的是 Otto + OpenClaw 所需的服务端、智控台和 body bridge 逻辑。
+该仓库包含 Otto + OpenClaw 所需的服务端、智控台和 body bridge 逻辑。
 
-它保证：
+该仓库保证：
 
 - 当前构建出的 `xiaozhi-local/server-openclaw:dev`
 - 当前构建出的 `xiaozhi-local/web-openclaw:dev`
 - 当前源码里的 `OpenClaw配对码` 下发与展示能力
 
-但 OpenClaw 网关本体如果在另一个仓库维护，仍然应当由你们在网关仓库里单独做版本发布和 tag 管理。
+如果 OpenClaw 网关本体在另一仓库中维护，仍应在网关仓库中单独进行版本发布和 tag 管理。
 
 ## 推荐阅读顺序
 

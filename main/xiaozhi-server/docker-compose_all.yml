@@ -1,6 +1,4 @@
 # Docker安装全模块
-
-version: '3'
 services:
   # Server模块
   xiaozhi-esp32-server:
