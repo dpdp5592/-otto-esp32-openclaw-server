@@ -2,12 +2,34 @@
 
 本仓库是从 `xiaozhi-esp32-server` 裁剪出的 Otto + OpenClaw 专用项目子集。
 
-目标很明确：
+该仓库承担系统中的“服务端与智控台”角色。
+
+目标如下：
 
 - 保留 Otto + OpenClaw 链路真正需要的源码
-- 保留当前项目需要的核心文档
-- 去掉与你本机强绑定的运行态数据、大模型文件和无关模块
+- 保留该项目需要的核心文档
+- 去掉运行态数据、大模型文件和无关模块
 - 使协作者在 `git clone` 后可按固定脚本启动，并默认运行该仓库中的最新 OpenClaw 网关代码
+
+## 三仓库关系
+
+完整方案由三个独立仓库组成：
+
+1. `otto-robot-esp32`
+   - Otto 固件工程
+   - 提供 `self.otto.*` 与 `self.screen.*` 本地能力
+2. `otto-esp32-openclaw-server`
+   - 服务端、智控台、body bridge
+   - 提供配对码、设备桥接、OpenClaw 调用入口
+3. `openclaw-otto-body-plugin`
+   - OpenClaw 原生插件
+   - 把 Otto 动作与表情能力暴露成 `otto_action` 等工具
+
+建议阅读顺序：
+
+1. `otto-robot-esp32`
+2. `otto-esp32-openclaw-server`
+3. `openclaw-otto-body-plugin`
 
 ## 项目结构
 
@@ -77,8 +99,8 @@ bash scripts/bootstrap_local_runtime.sh
 
 ```yaml
 server:
-  websocket: ws://<你的局域网IP>:8000/xiaozhi/v1/
-  vision_explain: http://<你的局域网IP>:8003/mcp/vision/explain
+  websocket: ws://<server-lan-ip>:8000/xiaozhi/v1/
+  vision_explain: http://<server-lan-ip>:8003/mcp/vision/explain
 ```
 
 这样可以避免设备拿到 Docker 容器内网地址。
@@ -224,6 +246,15 @@ OpenClaw 插件源码当前位于独立项目：
 - `otto_get_status`
 - `otto_set_theme`
 - `otto_set_emotion`
+
+## 集成完成判定
+
+当该仓库与另外两个仓库按文档完成集成后，应能达到以下效果：
+
+1. Otto 固件上线并暴露 `self.otto.action`、`self.otto.stop`、`self.otto.get_status`
+2. 智控台可显示 `OpenClaw配对码`
+3. OpenClaw 可通过 `otto_action` 触发 Otto 的前进、后退、转向、太空步、跳跃、摇摆等动作
+4. OpenClaw 可通过 `otto_set_theme` 与 `otto_set_emotion` 控制 Otto 屏幕表现
 
 ## 最小交付标准
 
