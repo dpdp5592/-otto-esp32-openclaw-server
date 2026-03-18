@@ -153,6 +153,78 @@ bash scripts/verify_openclaw_stack.sh
 - 仓库源码是否包含智控台 `pairCode` 下发逻辑
 - body bridge 配对设备接口是否可访问
 
+## OpenClaw 与 Otto 动作链路
+
+OpenClaw 侧并不直接控制舵机。
+
+当前链路是：
+
+`OpenClaw 插件工具 -> xiaozhi body bridge -> 设备侧 MCP -> Otto 固件动作实现`
+
+服务端 body bridge 已暴露以下 Otto 接口：
+
+- `POST /openclaw/body/v1/otto/action`
+- `POST /openclaw/body/v1/otto/stop`
+- `POST /openclaw/body/v1/otto/status`
+- `POST /openclaw/body/v1/otto/theme`
+- `POST /openclaw/body/v1/otto/emotion`
+
+它们在设备侧分别映射到：
+
+- `self.otto.action`
+- `self.otto.stop`
+- `self.otto.get_status`
+- `self.screen.set_theme`
+- `self.screen.set_emotion`
+
+因此，OpenClaw 调 Otto “前进 / 后退 / 太空步 / 跳跃 / 摇摆”这一类动作，实际都走 `otto_action`。
+
+典型动作映射如下：
+
+- 前进：`otto_action(action=\"walk\", direction=1, steps=3, speed=700, arm_swing=50)`
+- 后退：`otto_action(action=\"walk\", direction=-1, steps=3, speed=700, arm_swing=50)`
+- 左右转：`otto_action(action=\"turn\", direction=1 或 -1, steps=2, speed=700, arm_swing=50)`
+- 太空步：`otto_action(action=\"moonwalk\", direction=1 或 -1, steps=4, speed=700, amount=30)`
+- 跳跃：`otto_action(action=\"jump\", steps=2, speed=700)`
+- 摇摆：`otto_action(action=\"swing\", steps=3, speed=700, amount=30)`
+
+当前 Otto 固件已实现的主要动作集合包括：
+
+- `walk`
+- `turn`
+- `jump`
+- `swing`
+- `moonwalk`
+- `bend`
+- `shake_leg`
+- `updown`
+- `whirlwind_leg`
+- `sit`
+- `showcase`
+- `home`
+- `hands_up`
+- `hands_down`
+- `hand_wave`
+- `windmill`
+- `takeoff`
+- `fitness`
+- `greeting`
+- `shy`
+- `radio_calisthenics`
+- `magic_circle`
+
+OpenClaw 插件源码当前位于独立项目：
+
+- `openclaw-otto-body-plugin`
+
+该插件负责把上面的 bridge API 包装成 OpenClaw 原生工具：
+
+- `otto_action`
+- `otto_stop`
+- `otto_get_status`
+- `otto_set_theme`
+- `otto_set_emotion`
+
 ## 最小交付标准
 
 一名新的协作者成功接手该项目后，至少应满足：
